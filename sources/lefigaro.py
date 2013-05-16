@@ -33,7 +33,7 @@ def get():
         # Find the number of comments on this entry
         arts = urlopen(e["link"]).read()
         sleep(2) # To not be too hard on the website
-        art = BeautifulSoup(arts.encode("utf8"))
+        art = BeautifulSoup(arts)
         try:
             c = int(art.find(property="og:count")["content"])
             if c>THRESHOLD:
