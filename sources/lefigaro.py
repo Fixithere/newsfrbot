@@ -39,7 +39,7 @@ def get():
             if c>THRESHOLD:
                 sys.stdout.write("O")
                 sys.stdout.flush()
-                ret.append({'title':e["title"], 'link':e["link"]})
+                ret.append({'title':e["title"].decode("utf-8"), 'link':e["link"]})
             else:
                 sys.stdout.write(".")
                 sys.stdout.flush()
