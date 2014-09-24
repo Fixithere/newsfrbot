@@ -36,7 +36,8 @@ print "Password for",user,"?"
 passwd=getpass.getpass()
 reddit.login(user, passwd)
 
-already_published = cPickle.load(open("already_published","rb"))
+with open("already_published", "rb") as f:
+    already_published = cPickle.load(f)
 
 while True:
     try:
@@ -45,7 +46,6 @@ while True:
         lemondefeed = sources.lemonde.get()
         lefigarofeed = sources.lefigaro.get()
         
-
         for d in [('lefigaro', lefigarofeed), ('lemonde', lemondefeed), ('rue89', rue89feed)]:
         #for d in [('lemonde', lemondefeed), ('rue89', rue89feed)]:
             for e in d[1]:
@@ -55,12 +55,14 @@ while True:
                         reddit.submit(d[0], e['title'], url=e['link'])
                         sleep(10) # To comply with reddit's policy : no more than 0.5 req/sec
                         already_published.add(e['link'])
-                        cPickle.dump(already_published,open("already_published","w"))
+                        with open("already_published", "wb") as f:
+                            cPickle.dump(already_published, f)
                     except praw.errors.APIException as ex:
                         if ex.error_type=='ALREADY_SUB':
                             already_published.add(e['link'])
                             print "Already published :", e['title']
-                            cPickle.dump(already_published,open("already_published","w"))
+                            with open("already_published", "wb") as f:
+                                cPickle.dump(already_published, f)
                         else:
                             print asctime(),"Exception : Reddit offline ? Retrying in 5 minutes"
                             traceback.print_stack()
